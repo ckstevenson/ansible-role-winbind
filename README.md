@@ -22,6 +22,7 @@ An Ansible Role that joins Linux machines (Debian and CentOS) to Windows Active 
       ansible.builtin.include_role:
         name: ansible-role-winbind
         tasks_from: "{{ ansible_distribution|lower }}"
+
     - name: Include firewalld task if selected
       ansible.builtin.include_role:
           name: ansible-role-winbind

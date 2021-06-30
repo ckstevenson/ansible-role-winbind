@@ -1,10 +1,9 @@
 ---
-# roles/common/tasks/debian.yml
-# applies updates machine, edits hostname and joins to domain
 - name: Update cache if last update was done more than an hour before
   apt:
     update_cache: yes
     cache_valid_time: 3600
+    
 - name: Install required packages
   ansible.builtin.package:
     name: "{{ item }}"
@@ -14,6 +13,7 @@
     - libnss-winbind
     - ntp
   notify: restart ntp
+
 - name: Add winbind to nsswitch.conf
   ansible.builtin.lineinfile:
     path: /etc/nsswitch.conf
@@ -23,18 +23,21 @@
   loop:
     - (^passwd:.*)
     - (^group:.*)
-# TODO correct PAM implementation
+
 - name: Insert pam_mkhomedir.sp into /etc/pam.d/common-session
   ansible.builtin.lineinfile:
     path: /etc/pam.d/common-session
     insertafter: EOF
     line: session optional pam_mkhomedir.so skel=/etc/skel umask=077
+
 - name: Include global task for all OS variants
   ansible.builtin.include_tasks: global.yml
+
 - name: Enable ntp.service
   ansible.builtin.service:
     name: ntp
     enabled: yes
+
 - name: Add domain admins, root and wheel groups to sshd_config
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
