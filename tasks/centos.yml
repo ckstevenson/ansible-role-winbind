@@ -1,0 +1,35 @@
+---
+# roles/common/tasks/main.yml
+# applies updates machine, edits hostname and joins to domain
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - samba-winbind 
+    - ntp
+- name: Configure authentification services
+  ansible.builtin.command: 
+    argv:
+      - authconfig 
+      - --enablewinbind 
+      - --enablewinbindoffline 
+      - --enablewinbindauth 
+      - --enablemkhomedir 
+      - --update
+  notify: restart ntpd
+- name: Include global task for all OS variants
+  ansible.builtin.include_tasks: global.yml
+  #- include_role:
+  #    name: winbind_ad_join
+  #    tasks_from: global.yml
+- name: Enable ntpd.service
+  ansible.builtin.service:
+    name: ntpd
+    enabled: yes
+- name: Add domain admins, root and wheel groups to sshd_config
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "{{ item }}"
+  loop:
+    - '# Allowed groups'
+    - AllowGroups root sudo "{{ workgroup|upper }}\domain admins"

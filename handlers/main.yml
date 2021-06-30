@@ -1,0 +1,21 @@
+---
+- name: restart firewalld
+  service:
+    name: firewalld
+    state: restarted
+- name: restart winbind
+  service:
+    name: winbind
+    state: restarted
+- name: restart ntpd
+  service:
+    name: ntpd
+    state: restarted
+- name: restart ntp
+  service:
+    name: ntp
+    state: restarted
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted

@@ -1,0 +1,24 @@
+# See smb.conf.example for a more detailed config file or read the smb.conf manpage.
+# Run 'testparm' to verify the config is correct after you modified it.
+#
+# {{ ansible_managed }}
+
+[global]
+    workgroup = {{ workgroup|upper }}
+    realm = {{ domain|upper }}
+    security = ads
+    template shell = /bin/bash
+    kerberos method = secrets only
+    winbind use default domain = false
+    winbind offline logon = true
+
+    idmap config * : backend = tdb
+    idmap config * : range = 1000000-9999999
+    idmap config {{ workgroup|upper }} : backend = rid
+    idmap config {{ workgroup|upper }} : range = 10000 - 99999
+# Another backend can be added here
+#    idmap config  : backend = rid
+#    idmap config  : range = 100000 - 999999
+
+    log file = /var/log/samba/%m
+    log level = 1

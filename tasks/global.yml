@@ -1,0 +1,50 @@
+---
+- name: Ensure hosts file includes
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: 127.0.1.1 {{ ansible_hostname }}.{{ domain }} {{ ansible_hostname }}
+    owner: root
+    group: root 
+    mode: '0644'
+    setype: net_conf_t
+- name: Install ntp configuration file
+  ansible.builtin.template:
+    src: "{{ ntp_conf_src }}"
+    dest: "{{ ntp_conf_dest }}"
+    owner: root
+    group: root
+    setype: net_conf_t
+    mode: '0644'
+- name: Enable ntp synchronization
+  ansible.builtin.command: timedatectl set-ntp yes
+- name: Install smb configuration file
+  ansible.builtin.template:
+    src: "{{ smb_conf_src }}"
+    dest: "{{ smb_conf_dest }}"
+    owner: root
+    group: root
+    setype: samba_etc_t
+    mode: '0644'
+- name: Join the machine to AD with a specific path
+  ansible.builtin.command: 'net ads join -U "{{ ad_username }}%{{ ad_password }}" createcomputer="{{ ad_path }}" osName="{{ ansible_distribution }}" osVer="{{ ansible_distribution_version }}"'
+  notify: restart winbind
+- name: Enable winbind.service
+  ansible.builtin.service:
+    name: winbind
+    enabled: yes
+- name: Install domain sudoers file
+  ansible.builtin.template:
+    src: "{{ domain_conf_src }}"
+    dest: "{{ domain_conf_dest }}"
+    owner: root
+    group: root
+    setype: etc_t
+    mode: '0600'
+- name: Allow ssh password authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: 'PasswordAuthentication'
+    line: PasswordAuthentication yes
+  notify:
+    - restart sshd

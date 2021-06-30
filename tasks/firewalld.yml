@@ -1,0 +1,16 @@
+---
+# Edits firewalld for winbind services and ensures it is enabled
+- name: Add services to firewalld
+  ansible.builtin.firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop:
+    - ntp
+    - samba
+  notify: 
+    - restart firewalld
+- name: Enable firewalld
+  ansible.builtin.service:
+    name: firewalld
+    enabled: yes

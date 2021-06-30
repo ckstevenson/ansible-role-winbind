@@ -1,0 +1,10 @@
+pam_conf_src: pam.conf.j2
+pam_conf_dest: /usr/share/pam-configs/winbind
+ntp_conf_src: ntp.conf.j2
+ntp_conf_dest: /etc/ntp.conf
+hosts_conf_src: hosts.conf.j2
+hosts_conf_dest: /etc/hosts
+smb_conf_src: smb.conf.j2
+smb_conf_dest: /etc/samba/smb.conf
+domain_conf_src: domain.sudoers.j2
+domain_conf_dest: /etc/sudoers.d/{{ workgroup|upper }}
