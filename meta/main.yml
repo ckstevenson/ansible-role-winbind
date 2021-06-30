@@ -11,8 +11,8 @@ galaxy_info:
     - name: Debian
       versions:
         - all
-    - name: CentOS
+    - name: EL
       versions:
-        - all
+        - 7
   galaxy_tags:
     - winbind
