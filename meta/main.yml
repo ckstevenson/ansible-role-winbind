@@ -5,7 +5,7 @@ galaxy_info:
   role_name: winbind
   author: ckstevenson
   description: AD join CentOS/Debian with Winbind.
-  license: "license (BSD, MIT)"
+  license: MIT
   min_ansible_version: 2.10
   platforms:
     - name: Debian
@@ -16,3 +16,4 @@ galaxy_info:
         - 7
   galaxy_tags:
     - winbind
+    - linux
