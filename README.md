@@ -11,4 +11,4 @@ An Ansible Role that joins Linux machines (Debian and CentOS) to Windows Active 
     - ckstevenson.winbind
 ```
 ## License 
-MIT / BSD
+MIT
