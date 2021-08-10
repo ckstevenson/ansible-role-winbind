@@ -7,10 +7,8 @@ An Ansible Role that joins Linux machines (Debian and CentOS) to Windows Active 
 - hosts: all
   become: yes
   gather_facts: yes
-  tasks:
-    - name: Include the role ansible-role-windbind
-      ansible.builtin.include_role:
-        name: ckstevenson.winbind
+  roles:
+    - ckstevenson.winbind
 ```
 ## License 
 MIT / BSD
