@@ -1,0 +1,3 @@
+---
+- name: Include task for different variants
+  ansible.builtin.include_tasks: "{{ ansible_distribution|lower }}"
